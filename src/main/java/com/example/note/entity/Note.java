@@ -1,6 +1,6 @@
 package com.example.note.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -9,6 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
@@ -16,6 +20,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "NOTE")
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class Note implements Serializable {
 
     private static final long serialVersionUID = -2023965252799804172L;
@@ -29,48 +37,14 @@ public class Note implements Serializable {
     private String title;
 
     @Column(name = "BODY")
-    private String noteBody;
+    private String body;
 
     @Column(name = "CREATED_TIME")
-    private LocalDateTime addedTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd @ HH:mm:ss")
+    private LocalDateTime createdDate;
 
     @Column(name = "MODIFIED_TIME")
-    private LocalDateTime modifiedTime;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getNoteBody() {
-        return noteBody;
-    }
-
-    public void setNoteBody(String noteBody) {
-        this.noteBody = noteBody;
-    }
-
-    public LocalDateTime getAddedTime() {
-        return addedTime;
-    }
-
-    public void setAddedTime(LocalDateTime addedTime) {
-        this.addedTime = addedTime;
-    }
-
-    public LocalDateTime getModifiedTime() {
-        return modifiedTime;
-    }
-
-    public void setModifiedTime(LocalDateTime modifiedTime) {
-        this.modifiedTime = modifiedTime;
-    }
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd @ HH:mm:ss")
+    private LocalDateTime modifiedDate;
+    
 }

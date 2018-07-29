@@ -19,9 +19,26 @@
         <link href="css/sb-admin.css" rel="stylesheet">
 
         <script type="text/javascript">
-            function myFunction() {
-                var adate = new Date();
-                document.getElementById("addeddate").value = adate.toISOString();
+            function submitNote() {
+                $.ajax({
+                    url: "/addnote",
+                    type: 'POST',
+                    data: $('form#addNoteForm').serialize(),
+                    beforeSend: function (xhr) {
+
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        console.log("@Success" + data);
+                        window.alert('Note Submitted');
+                        $(':button[type="reset"]').click();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log("@Error");
+                    },
+                    complete: function (jqXHR, textStatus) {
+
+                    }
+                });
             }
         </script>
     </head>
@@ -55,7 +72,7 @@
                     </ol>
                     <!-- Page Content -->
                     <hr>		  
-                    <form action="http://localhost:8080/addnote" method = "post" onsubmit="myFunction();">
+                    <form id="addNoteForm"action="http://localhost:8080/addnote" method = "post" >
                         <div class="form-group col-md-5">
                             <label for="notetitle">Title</label>
                             <input type="text" class="form-control" id="notetitle" name="notetitle" placeholder="Title">
@@ -64,9 +81,8 @@
                             <label for="notebody">Body</label>
                             <input type="text" class="form-control" id="notebody" name="notebody" placeholder="Body">
                         </div>
-                        <input type="hidden" name="addeddate" id="addeddate" value=""/>
                         <div class="form-group col-md-3">
-                            <button type="submit" class="btn btn btn-success">Submit</button>
+                            <button type="button" class="btn btn btn-success" onclick="submitNote();">Submit</button>
                             <button type="reset" class="btn btn btn-primary">Reset</button>
                         </div>
                     </form>

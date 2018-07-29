@@ -64,13 +64,13 @@
                         {
                             "name": "Created Date",
                             "targets": 1,
-                            "data": 'addedTime',
+                            "data": 'createdDate',
                             "defaultContent": 'Not Data'
                         },
                         {
                             "name": "Modified Date",
                             "targets": 2,
-                            "data": 'modifiedTime',
+                            "data": 'modifiedDate',
                             "defaultContent": 'Not Modified'
                         },
                         {
@@ -113,6 +113,7 @@
                     },
                     success: function (data, textStatus, jqXHR) {
                         console.log("@Success" + data);
+                        location.reload();
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log("@Error");
@@ -195,7 +196,6 @@
                                 </table>
                             </div>
                         </div>
-                        <!--                        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>-->
                     </div>
                 </div>
                 <!-- /.container-fluid -->
@@ -221,8 +221,6 @@
         </a>
 
         <!-- Large modal -->
-        <!--        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>-->
-
         <div id="editpanal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -243,7 +241,6 @@
                             <p id="edcreatedate" name="edcreatedate"></p>
                         </div>
                         <input type="hidden" id="edid" name="edid" value="">
-                        <input type="hidden" name="modifieddate" id="modifieddate" value=""/>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" onclick='editnote();'>Save changes</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -252,6 +249,5 @@
                 </div>
             </div>
         </div>
-
     </body>
 </html>
