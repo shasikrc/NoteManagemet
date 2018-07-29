@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>SB Admin - Tables</title>
+        <!-- Bootstrap core CSS-->
+        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom fonts for this template-->
+        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+        <!-- Page level plugin CSS-->
+        <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+        <!-- Custom styles for this template-->
+        <link href="css/sb-admin.css" rel="stylesheet">
+
+
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <!-- Page level plugin JavaScript-->
+        <script src="vendor/datatables/jquery.dataTables.js"></script>
+        <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin.js"></script>
+
+        <script type="text/javascript">
+            var dt;
+            var viewAllNotes = function () {
+                $.ajax({
+                    url: "/viewAllNotes",
+                    type: 'GET',
+                    dataType: 'json',
+                    beforeSend: function (xhr) {
+
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        dataTableHandler(data);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                    },
+                    complete: function (jqXHR, textStatus) {
+
+                    }
+                });
+            };
+
+            function dataTableHandler(dataJson) {
+                dt = $('#dataTable').DataTable({
+                    "data": dataJson,
+                    "columnDefs": [
+                        {
+                            "name": "Title",
+                            "targets": 0,
+                            "data": 'title'
+
+                        },
+                        {
+                            "name": "Created Date",
+                            "targets": 1,
+                            "data": 'addedTime',
+                            "defaultContent": 'Not Data'
+                        },
+                        {
+                            "name": "Modified Date",
+                            "targets": 2,
+                            "data": 'modifiedTime',
+                            "defaultContent": 'Not Modified'
+                        },
+                        {
+                            "name": "Edit/Remove",
+                            "targets": 3,
+                            "data": null,
+                            "defaultContent": "<button class=\"btn btn-success\" onclick='seteditnote(this)'>Edit</button> <button class=\"btn btn-success\" onclick='deletenote(this)'>Delete</button>"
+                        },
+                        {
+                            "name": 'id',
+                            "targets": 4,
+                            "data": 'id',
+                            visible: false,
+                            "defaultContent": '23'
+                        }
+                    ]
+                });
+            }
+            ;
+            var seteditnote = function (e) {
+                var data = dt.row($(e).parents('tr')).data();
+                console.log(data);
+                console.log(dt.row($(e).parents('tr')));
+
+                $('#edtitle').val(data.title);
+                $('#edbody').val(data.noteBody);
+                $('#edid').val(data.id);
+                $('#edcreatedate').text(data.addedTime);
+                $('#editpanal').modal('toggle');
+
+            };
+
+            var editnote = function () {
+                $.ajax({
+                    url: "/editnote",
+                    type: 'POST',
+                    data: $('form#editnote').serialize(),
+                    beforeSend: function (xhr) {
+
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        console.log("@Success" + data);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log("@Error");
+                    },
+                    complete: function (jqXHR, textStatus) {
+
+                    }
+                });
+            };
+            var deletenote = function (c) {
+                var rowdelete = dt.row($(c).parents('tr'));
+                var noteid = rowdelete.data().id;
+
+                $.ajax({
+                    url: "/deletenote",
+                    type: 'GET',
+                    data: {noteId: noteid},
+                    beforeSend: function (xhr) {
+
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        console.log("@Success" + data);
+                        rowdelete.remove().draw();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log("@Error");
+                    },
+                    complete: function (jqXHR, textStatus) {
+
+                    }
+                });
+
+            };
+
+            $(document).ready(function () {
+                viewAllNotes();
+            });
+        </script>
+    </head>
+    <body id="page-top">
+        <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+            <a class="navbar-brand mr-1" href="">Note Tracker</a>
+        </nav>
+        <div id="wrapper">
+            <!-- Sidebar -->
+            <ul class="sidebar navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="add_note.html">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Add New Note</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="view_all_notes.html">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>All Notes</span>
+                    </a>
+                </li>
+            </ul>
+            <div id="content-wrapper">
+                <div class="container-fluid">
+                    <!-- Breadcrumbs-->
+                    <ol class="breadcrumb">
+                        <h3>View All Notes</h3>
+                    </ol>
+                    <!-- DataTables Example -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Created Date</th>
+                                            <th>Modified Date</th>
+                                            <th>Edit/Remove</th>
+                                            <th>id</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        <!--                        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>-->
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+
+                <!-- Sticky Footer -->
+                <footer class="sticky-footer">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright © Note Tracker 2018</span>
+                        </div>
+                    </div>
+                </footer>
+
+            </div>
+            <!-- /.content-wrapper -->
+
+        </div>
+        <!-- /#wrapper -->
+
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+
+        <!-- Large modal -->
+        <!--        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>-->
+
+        <div id="editpanal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Note</h5>
+                    </div>
+                    <form id="editnote">
+                        <div class="form-group col-md-5">
+                            <label for="edtitle">Title</label>
+                            <input type="text" class="form-control" id="edtitle" name="edtitle" value="" placeholder="Title" required>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label for="edbody">Body</label>
+                            <input type="text" class="form-control" id="edbody" name="edbody" value="" placeholder="Body" required>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="edcreatedate">Created Date</label>
+                            <p id="edcreatedate" name="edcreatedate"></p>
+                        </div>
+                        <input type="hidden" id="edid" name="edid" value="">
+                        <input type="hidden" name="modifieddate" id="modifieddate" value=""/>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick='editnote();'>Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
