@@ -17,7 +17,7 @@ import lombok.ToString;
 /**
  *  Note Entity
  * 
- * @author RC$
+ * @author Charitha
  */
 @Entity
 @Table(name = "NOTE",schema = "notes")
