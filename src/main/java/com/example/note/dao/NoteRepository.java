@@ -5,7 +5,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- *
+ * Custom NoteRepository
+ * 
  * @author Charitha
  */
 @Repository

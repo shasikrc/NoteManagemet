@@ -10,8 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- *
- * @author RC$
+ * Implementation of the NoteManagementService
+ * 
+ * @author Charitha
  */
 @Service
 @Slf4j
@@ -29,11 +30,11 @@ public class NoteManagementServiceImpl implements NoteManagementService {
 
     @Override
     public void addNote(String title, String description) throws NoteManagementException {
-        if(title == null || title.isEmpty()){
-            throw  new IllegalArgumentException("Null or empty title.");
+        if (title == null || title.isEmpty()) {
+            throw new IllegalArgumentException("Null or empty title.");
         }
-        if(description == null || description.isEmpty()){
-            throw  new IllegalArgumentException("Null or empty description.");
+        if (description == null || description.isEmpty()) {
+            throw new IllegalArgumentException("Null or empty description.");
         }
         log.info("A new note creation request received with title {} and description {}.", title, description);
         try {
@@ -53,12 +54,12 @@ public class NoteManagementServiceImpl implements NoteManagementService {
     public void editNote(Integer id, String title, String description) throws NoteManagementException {
         log.info("Edit note request received for id {} with title {} and descriptin {} ", id, title, description);
         try {
-        LocalDateTime modifiedDate = LocalDateTime.now();
-        Note modifiedNote = noteRepo.findById(id).get();
-        modifiedNote.setModifiedDate(modifiedDate);
-        modifiedNote.setTitle(title);
-        modifiedNote.setBody(description);
-        noteRepo.save(modifiedNote);
+            LocalDateTime modifiedDate = LocalDateTime.now();
+            Note modifiedNote = noteRepo.findById(id).get();
+            modifiedNote.setModifiedDate(modifiedDate);
+            modifiedNote.setTitle(title);
+            modifiedNote.setBody(description);
+            noteRepo.save(modifiedNote);
         } catch (Exception ex) {
             log.error("Failed to edit a note.", ex);
             throw new NoteManagementException(ex.getMessage());
@@ -66,15 +67,25 @@ public class NoteManagementServiceImpl implements NoteManagementService {
     }
 
     @Override
-    public int removeNoteById(Integer id) {
-        noteRepo.deleteById(id);
-        return 0;
+    public void removeNoteById(Integer id) throws NoteManagementException {
+        log.info("Remove note request received for id {}", id);
+        try {
+            noteRepo.deleteById(id);
+        } catch (Exception ex) {
+            log.error("Failed to remove a note.", ex);
+            throw new NoteManagementException(ex.getMessage());
+        }
     }
 
     @Override
     public ArrayList<Note> getAllNotes() {
         ArrayList<Note> notelist = new ArrayList<>();
-        noteRepo.findAll().forEach(e -> notelist.add(e));
+        try {
+            noteRepo.findAll().forEach(e -> notelist.add(e));
+        } catch (Exception ex) {
+            log.error("Failed to remove a note.", ex);
+        }
+
         return notelist;
     }
 }

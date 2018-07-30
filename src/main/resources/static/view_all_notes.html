@@ -43,7 +43,7 @@
                         dataTableHandler(data);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-
+                        window.alert('ERROR');
                     },
                     complete: function (jqXHR, textStatus) {
 
@@ -84,7 +84,7 @@
                             "targets": 4,
                             "data": 'id',
                             visible: false,
-                            "defaultContent": '23'
+                            "defaultContent": '0'
                         }
                     ]
                 });
@@ -96,9 +96,9 @@
                 console.log(dt.row($(e).parents('tr')));
 
                 $('#edtitle').val(data.title);
-                $('#edbody').val(data.noteBody);
+                $('#edbody').val(data.body);
                 $('#edid').val(data.id);
-                $('#edcreatedate').text(data.addedTime);
+                $('#edcreatedate').text(data.createdDate);
                 $('#editpanal').modal('toggle');
 
             };
@@ -116,6 +116,7 @@
                         location.reload();
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
+                        window.alert('ERROR');
                         console.log("@Error");
                     },
                     complete: function (jqXHR, textStatus) {
@@ -139,6 +140,7 @@
                         rowdelete.remove().draw();
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
+                        window.alert('ERROR');
                         console.log("@Error");
                     },
                     complete: function (jqXHR, textStatus) {

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
@@ -34,7 +33,7 @@ public class NoteController {
 
     @PostMapping("/addnote")
     public ResponseEntity addNote(@RequestParam(name = "notetitle") String title,
-            @RequestParam(name = "notebody") String body) {        
+            @RequestParam(name = "notebody") String body) {
         try {
             this.noteServie.addNote(title, body);
         } catch (NoteManagementException ex) {
@@ -45,9 +44,13 @@ public class NoteController {
 
     @GetMapping("/viewAllNotes")
     public ResponseEntity<ArrayList<Note>> getAllNotes() {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity(noteServie.getAllNotes(), httpHeaders, HttpStatus.OK);
+        try {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            return new ResponseEntity(noteServie.getAllNotes(), httpHeaders, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/editnote")
@@ -64,8 +67,12 @@ public class NoteController {
     }
 
     @GetMapping("/deletenote")
-    @ResponseBody
-    public int removeNote(@RequestParam(name = "noteId") String id) {
-        return noteServie.removeNoteById(Integer.parseInt(id));
+    public ResponseEntity removeNote(@RequestParam(name = "noteId") String id) {
+        try {
+            noteServie.removeNoteById(Integer.parseInt(id));
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

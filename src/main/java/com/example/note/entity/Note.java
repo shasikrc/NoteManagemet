@@ -15,11 +15,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- *
+ *  Note Entity
+ * 
  * @author RC$
  */
 @Entity
-@Table(name = "NOTE")
+@Table(name = "NOTE",schema = "notes")
 @Getter
 @Setter
 @NoArgsConstructor
